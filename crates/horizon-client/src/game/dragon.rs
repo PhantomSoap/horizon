@@ -1973,7 +1973,7 @@ impl Game<'_> {
         };
         let pos = d.position;
         let mut phase = d.phase.clone();
-        let collided = false;
+        let _collided = false;
         let far = |t: Option<Vec3>| {
             t.map_or(0.0, |t| {
                 (t.x - pos.x).powi(2) + (t.y - pos.y).powi(2) + (t.z - pos.z).powi(2)
@@ -1993,7 +1993,7 @@ impl Game<'_> {
                 clockwise,
             } => {
                 let dt = far(*target);
-                if dt < 100.0 || dt > 22500.0 || collided {
+                if !(100.0..=22500.0).contains(&dt) {
                     let done = path.as_ref().is_some_and(|p| p.0.done());
                     let mut chosen = false;
                     if done {
@@ -2063,7 +2063,7 @@ impl Game<'_> {
                     *target = Some(Vec3::new(pp.x, pp.y + ho, pp.z));
                 }
                 let dt = far(*target);
-                if dt < 100.0 || dt > 22500.0 {
+                if !(100.0..=22500.0).contains(&dt) {
                     if path.as_ref().is_none_or(|p| p.0.done()) {
                         *path = self.ring_path(clockwise).map(PathBox);
                     }
@@ -2110,7 +2110,7 @@ impl Game<'_> {
             }
             Phase::LandingApproach { path, target } => {
                 let dt = far(*target);
-                if dt < 100.0 || dt > 22500.0 || collided {
+                if !(100.0..=22500.0).contains(&dt) {
                     if path.as_ref().is_none_or(|p| p.0.done()) {
                         let current = self.closest_node(pos.x, pos.y, pos.z);
                         // NEAR_EGG_TARGETING: the enemy nearest the egg.
@@ -2215,7 +2215,7 @@ impl Game<'_> {
                             / f64::from(std::f32::consts::PI))
                             as f32
                             + 0.5;
-                        if angle < 0.0 || angle > 10.0 {
+                        if !(0.0..=10.0).contains(&angle) {
                             let head = d.parts[0].0;
                             let (xd, zd) = (pp.x - head.x, pp.z - head.z);
                             let delta = wrap64(
@@ -2313,7 +2313,7 @@ impl Game<'_> {
                     }
                 } else {
                     let dt = far(*target);
-                    if dt < 100.0 || dt > 22500.0 {
+                    if !(100.0..=22500.0).contains(&dt) {
                         *since += 1;
                     }
                 }
